@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "flickr": {
+      "command": "node",
+      "args": ["/home/park/wsl_codes/glow47/flickr/dist/index.js"]
+    }
+  }
+}

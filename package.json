@@ -1,0 +1,26 @@
+{
+  "name": "flickr-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Flickr API — album management, photo tagging, and organization",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "oauth-setup": "tsx src/auth/oauth-setup.ts"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "flickr-sdk": "^7.0.0-beta.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
