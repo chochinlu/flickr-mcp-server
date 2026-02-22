@@ -13,6 +13,8 @@ interface PhotoSummary {
   date_taken: string;
   thumbnail?: string;
   img_medium?: string;
+  views?: number;
+  count_faves?: number;
 }
 
 function extractPhotos(res: unknown): PhotoSummary[] {
@@ -36,6 +38,8 @@ function formatPhoto(p: Record<string, unknown>): PhotoSummary {
     date_taken: String(p["datetaken"] ?? ""),
     thumbnail: typeof p["url_sq"] === "string" ? p["url_sq"] : undefined,
     img_medium: typeof p["url_m"] === "string" ? p["url_m"] : undefined,
+    views: p["views"] != null ? Number(p["views"]) : undefined,
+    count_faves: p["count_faves"] != null ? Number(p["count_faves"]) : undefined,
   };
 }
 
@@ -76,7 +80,7 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
     },
     async (params) => {
       const apiParams: Record<string, string> = {
-        extras: "description,tags,date_taken,owner_name,url_sq,url_m",
+        extras: "description,tags,date_taken,owner_name,url_sq,url_m,views,count_faves",
         per_page: String(params.per_page),
         page: String(params.page),
       };
@@ -116,6 +120,7 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
         dates: photo["dates"],
         owner: photo["owner"],
         visibility: photo["visibility"],
+        views: Number(photo["views"] ?? 0),
         url: (photo["urls"] as Record<string, unknown>)?.["url"],
       };
       return { content: [{ type: "text" as const, text: JSON.stringify(info, null, 2) }] };
@@ -132,7 +137,7 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
     async (params) => {
       const res = await client.call("flickr.people.getPhotos", {
         user_id: "me",
-        extras: "description,tags,date_taken,url_sq,url_m",
+        extras: "description,tags,date_taken,url_sq,url_m,views,count_faves",
         per_page: String(params.per_page),
         page: String(params.page),
       });
@@ -213,7 +218,7 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
     },
     async (params) => {
       const res = await client.call("flickr.photos.getNotInSet", {
-        extras: "description,tags,date_taken,url_sq,url_m",
+        extras: "description,tags,date_taken,url_sq,url_m,views,count_faves",
         per_page: String(params.per_page),
         page: String(params.page),
       });
