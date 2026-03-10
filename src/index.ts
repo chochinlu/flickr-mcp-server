@@ -13,7 +13,7 @@ const client = createClient(config);
 
 const server = new McpServer({
   name: "flickr-mcp-server",
-  version: "1.0.0",
+  version: "1.1.0",
 });
 
 registerPhotoTools(server, client);
