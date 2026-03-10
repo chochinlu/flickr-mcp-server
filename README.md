@@ -4,7 +4,7 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 
 ## Features
 
-**14 tools** covering photo and album management:
+**18 tools** covering photo, album, and group management:
 
 ### Photo Tools
 
@@ -29,6 +29,15 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 | `flickr_add_photo_to_album` | Add a photo to an album | Write |
 | `flickr_remove_photo_from_album` | Remove a photo from an album | Write |
 | `flickr_edit_album_meta` | Update album title and description | Write |
+
+### Group Tools
+
+| Tool | Description | Read/Write |
+|------|-------------|------------|
+| `flickr_list_my_groups` | List all groups you've joined | Read |
+| `flickr_search_groups` | Search for groups by keyword | Read |
+| `flickr_add_photo_to_group` | Submit a photo to a group pool | Write |
+| `flickr_leave_group` | Leave a group | Delete |
 
 All list/search tools return **thumbnail and medium image URLs** for AI-powered visual analysis.
 
@@ -124,6 +133,9 @@ Once connected, you can ask your AI assistant things like:
 - "Add tags `tokyo`, `japan`, `2024` to photo 12345678"
 - "Create a new album called 'Tokyo Trip' with photo 12345678 as the cover"
 - "Move these photos into the Tokyo Trip album"
+- "List all groups I've joined"
+- "Submit this photo to the Street Photography group"
+- "Leave all inactive groups with less than 100 photos"
 
 ## Project Structure
 
@@ -135,6 +147,7 @@ src/
   tools/
     photos.ts           # Photo management tools
     albums.ts           # Album management tools
+    groups.ts           # Group management tools
   auth/
     oauth-setup.ts      # One-time OAuth setup CLI
 ```
@@ -157,7 +170,7 @@ MIT
 
 ## 功能
 
-**14 個工具**，涵蓋照片與相簿管理：
+**18 個工具**，涵蓋照片、相簿與群組管理：
 
 ### 照片工具
 
@@ -182,6 +195,15 @@ MIT
 | `flickr_add_photo_to_album` | 將照片加入相簿 | 寫 |
 | `flickr_remove_photo_from_album` | 從相簿移除照片 | 寫 |
 | `flickr_edit_album_meta` | 修改相簿標題與描述 | 寫 |
+
+### 群組工具
+
+| 工具 | 功能 | 讀/寫 |
+|------|------|-------|
+| `flickr_list_my_groups` | 列出已加入的所有群組 | 讀 |
+| `flickr_search_groups` | 依關鍵字搜尋群組 | 讀 |
+| `flickr_add_photo_to_group` | 將照片投稿到群組 | 寫 |
+| `flickr_leave_group` | 退出群組 | 刪除 |
 
 所有列表/搜尋工具都會回傳**縮圖與中等尺寸圖片 URL**，方便 AI 進行視覺分析。
 
@@ -277,6 +299,9 @@ npm run build
 - 「幫照片 12345678 加上 `tokyo`、`japan`、`2024` 標籤」
 - 「建立一個叫『東京之旅』的新相簿，用照片 12345678 當封面」
 - 「把這些照片移到東京之旅相簿」
+- 「列出我加入的所有群組」
+- 「把這張照片投稿到街拍群組」
+- 「退出所有照片數不到 100 的不活躍群組」
 
 ## API 限制
 
