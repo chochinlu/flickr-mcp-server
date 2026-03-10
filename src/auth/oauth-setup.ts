@@ -65,7 +65,7 @@ async function main(): Promise<void> {
     );
 
     // Step 2: Direct user to authorize
-    const authorizeUrl = oauth.authorizeUrl(requestToken, "write");
+    const authorizeUrl = oauth.authorizeUrl(requestToken, "delete");
     console.log("\nStep 2: Open this URL in your browser and authorize the app:\n");
     console.log(`  ${authorizeUrl}\n`);
 

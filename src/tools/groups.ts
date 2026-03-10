@@ -14,7 +14,13 @@ export function registerGroupTools(server: McpServer, client: FlickrClient): voi
     "flickr_list_my_groups",
     {},
     async () => {
-      const res = await client.call("flickr.people.getGroups");
+      // First get the authenticated user's NSID
+      const loginRes = await client.call("flickr.test.login");
+      const loginData = loginRes as Record<string, unknown>;
+      const user = loginData["user"] as Record<string, unknown> | undefined;
+      const userId = String(user?.["id"] ?? "");
+
+      const res = await client.call("flickr.people.getGroups", { user_id: userId });
       const data = res as Record<string, unknown>;
       const groupsWrapper = data["groups"] as Record<string, unknown> | undefined;
       const list = (groupsWrapper?.["group"] as Array<Record<string, unknown>>) ?? [];
@@ -56,6 +62,20 @@ export function registerGroupTools(server: McpServer, client: FlickrClient): voi
         if (msg.includes("2")) return { content: [{ type: "text" as const, text: `Not a member of group ${group_id}. Please join first.` }] };
         throw err;
       }
+    }
+  );
+
+  // --- leave_group ---
+  server.tool(
+    "flickr_leave_group",
+    {
+      group_id: z.string().describe("Flickr group ID (NSID) to leave"),
+    },
+    async ({ group_id }) => {
+      await client.call("flickr.groups.leave", { group_id });
+      return {
+        content: [{ type: "text" as const, text: `Left group ${group_id}.` }],
+      };
     }
   );
 
