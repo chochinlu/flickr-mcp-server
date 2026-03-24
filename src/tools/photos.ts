@@ -10,6 +10,8 @@ interface PhotoSummary {
   description: string;
   tags: string;
   url: string;
+  owner?: string;
+  owner_name?: string;
   date_taken: string;
   thumbnail?: string;
   img_medium?: string;
@@ -35,6 +37,8 @@ function formatPhoto(p: Record<string, unknown>): PhotoSummary {
     description: titleText(p["description"]),
     tags: typeof p["tags"] === "string" ? p["tags"] : "",
     url: `https://www.flickr.com/photos/${p["owner"] ?? "me"}/${id}`,
+    owner: typeof p["owner"] === "string" ? p["owner"] : undefined,
+    owner_name: typeof p["ownername"] === "string" ? p["ownername"] : undefined,
     date_taken: String(p["datetaken"] ?? ""),
     thumbnail: typeof p["url_sq"] === "string" ? p["url_sq"] : undefined,
     img_medium: typeof p["url_m"] === "string" ? p["url_m"] : undefined,
@@ -222,6 +226,31 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
         per_page: String(params.per_page),
         page: String(params.page),
       });
+      const photos = extractPhotos(res);
+      const meta = paginationMeta((res as Record<string, unknown>)["photos"] as Record<string, unknown>);
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify({ ...meta, photos }, null, 2) }],
+      };
+    }
+  );
+
+  // --- get_explore (interestingness) ---
+  server.tool(
+    "flickr_get_explore",
+    {
+      date: z.string().optional().describe("Date to fetch explore photos for (YYYY-MM-DD). Defaults to yesterday."),
+      per_page: z.number().int().min(1).max(500).default(100).describe("Results per page"),
+      page: z.number().int().min(1).default(1).describe("Page number"),
+    },
+    async (params) => {
+      const apiParams: Record<string, string> = {
+        extras: "description,tags,date_taken,owner_name,url_sq,url_m,views,count_faves",
+        per_page: String(params.per_page),
+        page: String(params.page),
+      };
+      if (params.date) apiParams["date"] = params.date;
+
+      const res = await client.call("flickr.interestingness.getList", apiParams);
       const photos = extractPhotos(res);
       const meta = paginationMeta((res as Record<string, unknown>)["photos"] as Record<string, unknown>);
       return {
