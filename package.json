@@ -1,6 +1,6 @@
 {
   "name": "flickr-mcp-server",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "MCP server for Flickr API — album management, photo tagging, and organization",
   "type": "module",
   "main": "dist/index.js",

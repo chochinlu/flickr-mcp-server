@@ -7,18 +7,20 @@ import { createClient } from "./flickr-client.js";
 import { registerPhotoTools } from "./tools/photos.js";
 import { registerAlbumTools } from "./tools/albums.js";
 import { registerGroupTools } from "./tools/groups.js";
+import { registerContactTools } from "./tools/contacts.js";
 
 const config = getConfig();
 const client = createClient(config);
 
 const server = new McpServer({
   name: "flickr-mcp-server",
-  version: "1.1.0",
+  version: "1.2.0",
 });
 
 registerPhotoTools(server, client);
 registerAlbumTools(server, client);
 registerGroupTools(server, client);
+registerContactTools(server, client);
 
 async function main(): Promise<void> {
   const transport = new StdioServerTransport();

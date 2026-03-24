@@ -229,4 +229,40 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
       };
     }
   );
+
+  // --- add_favorite ---
+  server.tool(
+    "flickr_add_favorite",
+    {
+      photo_id: z.string().describe("Flickr photo ID to add as favorite"),
+    },
+    async ({ photo_id }) => {
+      try {
+        await client.call("flickr.favorites.add", { photo_id });
+        return { content: [{ type: "text" as const, text: `Photo ${photo_id} added to favorites.` }] };
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        if (msg.includes("3")) return { content: [{ type: "text" as const, text: `Photo ${photo_id} is already in your favorites.` }] };
+        throw err;
+      }
+    }
+  );
+
+  // --- remove_favorite ---
+  server.tool(
+    "flickr_remove_favorite",
+    {
+      photo_id: z.string().describe("Flickr photo ID to remove from favorites"),
+    },
+    async ({ photo_id }) => {
+      try {
+        await client.call("flickr.favorites.remove", { photo_id });
+        return { content: [{ type: "text" as const, text: `Photo ${photo_id} removed from favorites.` }] };
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        if (msg.includes("1")) return { content: [{ type: "text" as const, text: `Photo ${photo_id} is not in your favorites.` }] };
+        throw err;
+      }
+    }
+  );
 }
