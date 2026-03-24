@@ -4,7 +4,7 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 
 ## Features
 
-**18 tools** covering photo, album, and group management:
+**22 tools** covering photo, album, group, and social management:
 
 ### Photo Tools
 
@@ -18,6 +18,8 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 | `flickr_set_photo_tags` | Replace all tags on a photo | Write |
 | `flickr_add_photo_tags` | Append tags to a photo | Write |
 | `flickr_set_photo_meta` | Update photo title and description | Write |
+| `flickr_add_favorite` | Add a photo to your favorites (like) | Write |
+| `flickr_remove_favorite` | Remove a photo from your favorites (unlike) | Write |
 
 ### Album Tools
 
@@ -38,6 +40,13 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 | `flickr_search_groups` | Search for groups by keyword | Read |
 | `flickr_add_photo_to_group` | Submit a photo to a group pool | Write |
 | `flickr_leave_group` | Leave a group | Delete |
+
+### Contact Tools
+
+| Tool | Description | Read/Write |
+|------|-------------|------------|
+| `flickr_follow_user` | Follow a user (add as contact) | Write |
+| `flickr_unfollow_user` | Unfollow a user (remove contact) | Write |
 
 All list/search tools return **thumbnail and medium image URLs** for AI-powered visual analysis.
 
@@ -136,6 +145,8 @@ Once connected, you can ask your AI assistant things like:
 - "List all groups I've joined"
 - "Submit this photo to the Street Photography group"
 - "Leave all inactive groups with less than 100 photos"
+- "Like this photo and follow the photographer"
+- "Add this photo to my favorites"
 
 ## Project Structure
 
@@ -145,9 +156,10 @@ src/
   config.ts             # Environment variable validation (Zod)
   flickr-client.ts      # Flickr API client with rate limiting
   tools/
-    photos.ts           # Photo management tools
+    photos.ts           # Photo management tools (incl. favorites)
     albums.ts           # Album management tools
     groups.ts           # Group management tools
+    contacts.ts         # Contact/follow tools
   auth/
     oauth-setup.ts      # One-time OAuth setup CLI
 ```
@@ -170,7 +182,7 @@ MIT
 
 ## 功能
 
-**18 個工具**，涵蓋照片、相簿與群組管理：
+**22 個工具**，涵蓋照片、相簿、群組與社交管理：
 
 ### 照片工具
 
@@ -184,6 +196,8 @@ MIT
 | `flickr_set_photo_tags` | 設定照片標籤（覆蓋原有標籤） | 寫 |
 | `flickr_add_photo_tags` | 新增標籤（不覆蓋） | 寫 |
 | `flickr_set_photo_meta` | 更新照片標題與描述 | 寫 |
+| `flickr_add_favorite` | 將照片加入最愛（按讚） | 寫 |
+| `flickr_remove_favorite` | 從最愛移除照片（取消按讚） | 寫 |
 
 ### 相簿工具
 
@@ -204,6 +218,13 @@ MIT
 | `flickr_search_groups` | 依關鍵字搜尋群組 | 讀 |
 | `flickr_add_photo_to_group` | 將照片投稿到群組 | 寫 |
 | `flickr_leave_group` | 退出群組 | 刪除 |
+
+### 聯絡人工具
+
+| 工具 | 功能 | 讀/寫 |
+|------|------|-------|
+| `flickr_follow_user` | 追蹤使用者（加入聯絡人） | 寫 |
+| `flickr_unfollow_user` | 取消追蹤（移除聯絡人） | 寫 |
 
 所有列表/搜尋工具都會回傳**縮圖與中等尺寸圖片 URL**，方便 AI 進行視覺分析。
 
@@ -302,6 +323,8 @@ npm run build
 - 「列出我加入的所有群組」
 - 「把這張照片投稿到街拍群組」
 - 「退出所有照片數不到 100 的不活躍群組」
+- 「幫我對這張照片按讚，然後追蹤這個攝影師」
+- 「把這張照片加入我的最愛」
 
 ## API 限制
 
