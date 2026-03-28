@@ -213,6 +213,31 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
     }
   );
 
+  // --- get_exif (camera & EXIF metadata) ---
+  server.tool(
+    "flickr_get_exif",
+    {
+      photo_id: z.string().describe("Flickr photo ID"),
+    },
+    async ({ photo_id }) => {
+      const res = await client.call("flickr.photos.getExif", { photo_id });
+      const photo = (res as Record<string, unknown>)["photo"] as Record<string, unknown> | undefined;
+      if (!photo) {
+        return { content: [{ type: "text" as const, text: "EXIF data not found." }], isError: true };
+      }
+      const camera = String(photo["camera"] ?? "");
+      const exifTags = (photo["exif"] as Array<Record<string, unknown>>) ?? [];
+      const exif = exifTags.map((t) => ({
+        tag: String(t["tag"] ?? ""),
+        label: String(t["label"] ?? ""),
+        raw: typeof t["raw"] === "object" ? String((t["raw"] as Record<string, unknown>)["_content"] ?? "") : String(t["raw"] ?? ""),
+      }));
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify({ camera, exif }, null, 2) }],
+      };
+    }
+  );
+
   // --- get_not_in_set (photos not in any album) ---
   server.tool(
     "flickr_get_not_in_set",

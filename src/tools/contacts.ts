@@ -11,7 +11,7 @@ export function registerContactTools(server: McpServer, client: FlickrClient): v
     },
     async ({ user_id }) => {
       try {
-        await client.call("flickr.contacts.add", { user_id });
+        await client.call("flickr.contacts.add", { user_id, friend: "0", family: "0" });
         return { content: [{ type: "text" as const, text: `Now following user ${user_id}.` }] };
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
