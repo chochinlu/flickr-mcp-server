@@ -284,6 +284,47 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
     }
   );
 
+  // --- set_photo_license ---
+  server.tool(
+    "flickr_set_photo_license",
+    {
+      photo_id: z.string().describe("Flickr photo ID"),
+      license_id: z.number().int().min(0).max(16).describe("License ID (0=All Rights Reserved, 1-6=CC 2.0, 9=CC0, 11-16=CC 4.0)"),
+    },
+    async ({ photo_id, license_id }) => {
+      await client.call("flickr.photos.licenses.setLicense", {
+        photo_id,
+        license_id: String(license_id),
+      });
+      return { content: [{ type: "text" as const, text: `License updated to ${license_id} for photo ${photo_id}.` }] };
+    }
+  );
+
+  // --- set_photo_perms (visibility) ---
+  server.tool(
+    "flickr_set_photo_perms",
+    {
+      photo_id: z.string().describe("Flickr photo ID"),
+      is_public: z.number().int().min(0).max(1).default(1).describe("1 = public, 0 = private"),
+      is_friend: z.number().int().min(0).max(1).default(0).describe("1 = visible to friends"),
+      is_family: z.number().int().min(0).max(1).default(0).describe("1 = visible to family"),
+      perm_comment: z.number().int().min(0).max(3).default(3).describe("Who can comment (0=nobody, 1=friends&family, 2=contacts, 3=everybody)"),
+      perm_addmeta: z.number().int().min(0).max(3).default(3).describe("Who can add tags/notes (0=owner, 1=friends&family, 2=contacts, 3=everybody)"),
+    },
+    async ({ photo_id, is_public, is_friend, is_family, perm_comment, perm_addmeta }) => {
+      await client.call("flickr.photos.setPerms", {
+        photo_id,
+        is_public: String(is_public),
+        is_friend: String(is_friend),
+        is_family: String(is_family),
+        perm_comment: String(perm_comment),
+        perm_addmeta: String(perm_addmeta),
+      });
+      const vis = is_public ? "public" : "private";
+      return { content: [{ type: "text" as const, text: `Permissions updated for photo ${photo_id}: ${vis}.` }] };
+    }
+  );
+
   // --- add_favorite ---
   server.tool(
     "flickr_add_favorite",
