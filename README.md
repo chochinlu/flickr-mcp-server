@@ -4,7 +4,7 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 
 ## Features
 
-**22 tools** covering photo, album, group, and social management:
+**26 tools** covering photo, album, group, and social management:
 
 ### Photo Tools
 
@@ -13,11 +13,15 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 | `flickr_search_photos` | Search photos by keyword, tags, date range | Read |
 | `flickr_get_photo_info` | Get detailed photo metadata | Read |
 | `flickr_get_photo_sizes` | Get image URLs for all available sizes | Read |
+| `flickr_get_exif` | Get camera & EXIF metadata for a photo | Read |
+| `flickr_get_explore` | Get photos from Flickr Explore (interestingness) | Read |
 | `flickr_list_my_photos` | List your own photos (including private) | Read |
 | `flickr_get_not_in_set` | List photos not in any album | Read |
 | `flickr_set_photo_tags` | Replace all tags on a photo | Write |
 | `flickr_add_photo_tags` | Append tags to a photo | Write |
 | `flickr_set_photo_meta` | Update photo title and description | Write |
+| `flickr_set_photo_license` | Set photo license (All Rights Reserved, CC, etc.) | Write |
+| `flickr_set_photo_perms` | Set photo visibility and permissions | Write |
 | `flickr_add_favorite` | Add a photo to your favorites (like) | Write |
 | `flickr_remove_favorite` | Remove a photo from your favorites (unlike) | Write |
 
@@ -162,6 +166,8 @@ src/
     contacts.ts         # Contact/follow tools
   auth/
     oauth-setup.ts      # One-time OAuth setup CLI
+scripts/
+  batch-set-license.ts  # Batch update all photos to a specified license
 ```
 
 ## API Rate Limits
@@ -182,7 +188,7 @@ MIT
 
 ## 功能
 
-**22 個工具**，涵蓋照片、相簿、群組與社交管理：
+**26 個工具**，涵蓋照片、相簿、群組與社交管理：
 
 ### 照片工具
 
@@ -191,11 +197,15 @@ MIT
 | `flickr_search_photos` | 依關鍵字、標籤、日期範圍搜尋照片 | 讀 |
 | `flickr_get_photo_info` | 取得照片詳細資訊 | 讀 |
 | `flickr_get_photo_sizes` | 取得照片各尺寸的圖片 URL | 讀 |
+| `flickr_get_exif` | 取得照片的相機與 EXIF 資訊 | 讀 |
+| `flickr_get_explore` | 取得 Flickr Explore 精選照片 | 讀 |
 | `flickr_list_my_photos` | 列出自己的照片（含私人照片） | 讀 |
 | `flickr_get_not_in_set` | 列出未歸入任何相簿的照片 | 讀 |
 | `flickr_set_photo_tags` | 設定照片標籤（覆蓋原有標籤） | 寫 |
 | `flickr_add_photo_tags` | 新增標籤（不覆蓋） | 寫 |
 | `flickr_set_photo_meta` | 更新照片標題與描述 | 寫 |
+| `flickr_set_photo_license` | 設定照片授權條款（All Rights Reserved、CC 等） | 寫 |
+| `flickr_set_photo_perms` | 設定照片可見性與權限（公開/私人） | 寫 |
 | `flickr_add_favorite` | 將照片加入最愛（按讚） | 寫 |
 | `flickr_remove_favorite` | 從最愛移除照片（取消按讚） | 寫 |
 
