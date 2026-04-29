@@ -360,4 +360,29 @@ export function registerPhotoTools(server: McpServer, client: FlickrClient): voi
       }
     }
   );
+
+  // --- add_comment ---
+  server.tool(
+    "flickr_add_comment",
+    {
+      photo_id: z.string().describe("Flickr photo ID to comment on"),
+      comment_text: z.string().min(1).describe("Comment text (HTML allowed). Cannot be empty."),
+    },
+    async ({ photo_id, comment_text }) => {
+      const res = await client.call("flickr.photos.comments.addComment", {
+        photo_id,
+        comment_text,
+      });
+      const comment = (res as Record<string, unknown>)["comment"] as Record<string, unknown> | undefined;
+      const commentId = comment ? String(comment["id"] ?? "") : "";
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: `Comment added to photo ${photo_id}${commentId ? ` (comment id: ${commentId})` : ""}.`,
+          },
+        ],
+      };
+    }
+  );
 }

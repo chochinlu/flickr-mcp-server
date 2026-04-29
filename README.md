@@ -4,7 +4,7 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 
 ## Features
 
-**26 tools** covering photo, album, group, and social management:
+**27 tools** covering photo, album, group, and social management:
 
 ### Photo Tools
 
@@ -24,6 +24,7 @@ An MCP (Model Context Protocol) server that connects AI assistants to the Flickr
 | `flickr_set_photo_perms` | Set photo visibility and permissions | Write |
 | `flickr_add_favorite` | Add a photo to your favorites (like) | Write |
 | `flickr_remove_favorite` | Remove a photo from your favorites (unlike) | Write |
+| `flickr_add_comment` | Post a comment on a photo | Write |
 
 ### Album Tools
 
@@ -208,6 +209,7 @@ MIT
 | `flickr_set_photo_perms` | 設定照片可見性與權限（公開/私人） | 寫 |
 | `flickr_add_favorite` | 將照片加入最愛（按讚） | 寫 |
 | `flickr_remove_favorite` | 從最愛移除照片（取消按讚） | 寫 |
+| `flickr_add_comment` | 在照片下發布留言 | 寫 |
 
 ### 相簿工具
 
